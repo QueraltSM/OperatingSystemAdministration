@@ -1,0 +1,103 @@
+
+
+1. Crear dos volúmenes físicos (PV) de LVM que hagan uso de los discos
+/dev/sdb y /dev/sdc, respectivamente. Para ello, ambos discos deben
+tener una única partición que ocupe todo el tamaño disponible, de tipo
+lvm (órdenes fdisk y pvcreate):
+
+	pvcreate /dev/sdb
+	
+	pvcreate /dev/sdc
+
+
+
+2. Crear un grupo de volúmenes (VG) que incorpore los dos Pvs del
+apartado anterior; el nombre de este nuevo VG ha de ser «VG_ASO»
+(orden vgcreate):
+
+	vgcreate VG_ASO /dev/sdb /dev/sdc
+
+	vgdisplay
+
+
+
+3. Crear un volumen lógico (LV) de 100 MiB. El espacio ha de tomarse del
+VG «VG_ASO» (orden lvcreate):
+
+	lvcreate —size=100M VG_ASO
+	
+	lvdisplay
+
+
+
+4. Crear un sistema de ficheros de tipo ext4, con la etiqueta «MEDIA», en
+el LV recién creado. Montarlo manualmente en el directorio /mnt.
+Comprobar que puede accederse a él para leer y escribir. Copiar
+recursivamente los directorios /bin y /usr/bin a /mnt. Volver a montar el
+sistema de ficheros en modo solo lectura. Desmontar /mnt:
+
+	
+	mkfs construye un sistema de ficheros de Linux
+	
+	mkfs.ext4 -L MEDIA /dev/VG_ASO/lvol0 
+
+	mount /dev/VG_ASO/lvol0 /mnt
+		
+	cp -r /bin /mnt
+
+	mkdir /mnt/usr 
+
+	cp -r /usr/bin /mnt/usr
+
+	mount -o remount,ro /dev/VG_ASO/lvol0
+
+	umount /dev/VG_ASO/lvol0
+
+
+
+5. Ampliar el tamaño del sistema de ficheros «MEDIA» del apartado
+anterior en 40 MiB más. Para ello, primero habrá que extender
+suficientemente el tamaño del LV que lo soporta y después extender el
+tamaño del propio sistema de ficheros (órdenes lvextend y resize2fs:
+
+	lvextend /dev/VG_ASO/lvol0 --size=+40M
+	
+	lvdisplay
+
+	e2fsck -f /dev/VG_ASO/lvol0
+
+	resize2fs /dev/VG_ASO/lvol0 140M
+	
+	mount /dev/VG_ASO/lvol0 /mnt
+
+
+
+6. Crear un nuevo sistema de ficheros de tipo ext4, etiquetado como
+«BACKUP», de 80 MiB de capacidad. El nuevo sistema de ficheros debe
+tener capacidad para albergar 3000 archivos y su tamaño de bloque ha
+de ser de 2048 bytes (órdenes lvcreate y mkfs):
+
+	lvcreate --size=80M VG_ASO
+
+	mkfs.ext4 -L BACKUP -b 2048 -N 3000 /dev/VG_ASO/lvol1
+	
+
+
+7. Verificar la integridad del sistema de archivos «BACKUP». Primero sin
+corrección automática y en segundo lugar con corrección automática (orden fsck):
+
+	fsck -f /dev/VG_ASO/lvol1
+
+
+
+8. Crear los directorios /var/media y /var/backup. Configurar el sistema para
+que los sistemas de archivos «MEDIA» y «BACKUP» creados
+anteriormente se monten de forma automática en los directorios /var/media y /var/backup respectivamente cada vez que el sistema
+arranque (fichero /etc/fstab):
+
+	mkdir /var/{media,backup}
+	
+	/dev/VG_ASO/lvol0 /var/media ext4 defaults 0 0
+
+	/dev/VG_ASO/lvol1 /var/backup ext4 defaults 0 0
+

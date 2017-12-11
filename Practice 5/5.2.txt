@@ -1,0 +1,31 @@
+
+1. Configurar el sistema de archivos «MEDIA» para que cada vez que el sistema se reinicie, se realice una comprobación de la integridad del sistema de archivos:
+
+	tune2fs -C 1 /dev/VG_ASO/lvol0
+
+
+	
+2. Obtener todos los parámetros de configuración del sistema de archivos “MEDIA”:
+
+	tune2fs -l /dev/VG_ASO/lvol0
+
+
+	
+3. Configurar los sistemas de archivos «MEDIA» y «BACKUP» para que cada cinco veces que se monte el sistema de archivos, al arrancar, se produzca una verificación de su integridad:
+	
+	tune2fs -c 5 /dev/VG_ASO/lvol0
+	tune2fs -c 5 /dev/VG_ASO/lvol1
+	
+
+
+4. Mostrar el espacio disponible en cada uno de los sistemas de archivos que están montados actualmente:
+
+	df -h /dev/VG_ASO/lvol0 /dev/VG_ASO/lvol1
+
+
+	
+5. Obtener el espacio consumido por los directorios /usr y /var:
+
+	du -shc /usr /var
+
+	

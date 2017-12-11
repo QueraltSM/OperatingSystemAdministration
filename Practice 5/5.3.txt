@@ -1,0 +1,54 @@
+1. Activar el sistema de cuotas en los sistemas de archivos MEDIA y
+BACKUP.
+
+
+/dev/VG_ASO/lvol0 /var/media ext4 defaults,usrquota,grpquota 0 0
+
+/dev/VG_ASO/lvol1 /var/backup ext4 defaults,usrquota,grpquota 0 0
+
+mount -o remount /var/media  
+
+mount -o remount /var/backup
+
+quotacheck -mcug /var/media
+
+quotacheck -mcug / var/backup
+
+quotaon /var/backup
+
+quotaon /var/media
+
+
+
+2. Establecer para el usuario prueba una cuota de espacio de 20 MiB y 200
+archivos.
+
+edquota -u prueba
+
+
+
+3. Establecer para el grupo de usuarios prueba una cuota de espacio de 50
+MiB y 600 archivos.
+
+edquota -u prueba
+
+
+
+4. Obtener el porcentaje alcanzado para cada una de las cuotas
+establecidas.
+
+repquota -a
+
+
+
+5. Configurar los periodos de gracia del sistema de cuotas
+
+edquota -t 
+
+
+
+
+
+
+
+	
