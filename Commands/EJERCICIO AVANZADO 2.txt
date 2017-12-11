@@ -1,0 +1,26 @@
+Dificultad: media
+Obtenga la lista de usuarios que son propietarios de más de un fichero en el directorio /tmp
+
+Cumpla con estos requisitos:
+
+La búsqueda debe considerar los cualquier tipo de ficheros (regulares, dispositivos, directorios, ...).
+
+
+No haga recorridos recursivos, sólo rastree los elementos que están directamente accesibles desde el directorio /tmp.
+
+
+El listado no debe mostrar duplicados (un usuario sólo puede aparecer una vez en la lista).
+
+
+cd /tmp | ls-lh | sort | cut -f3 -d' ' | uniq -d
+
+
+uniq -d : coge solo los que se repiten 
+
+primero los ordeno para luego sacar los que se repiten
+
+
+si fuera repulsivamente:
+
+lo mismo pero: ls -lR y el sort después del cut para ordenarlos primero
+

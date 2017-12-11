@@ -1,0 +1,32 @@
+Escribir un Script que permita encontrar aquellos usuarios cuyos UID se encuentran comprendidos en un determinado rango. Los valores de dicho rango se pasan como argumento; el primer argumento debe ser el valor mínimo y el segundo argumento debe ser el valor máximo. (Pista: utilice la variable IFS para leer siguiendo un formato de registro el archivo /etc/passwd) [Dificultad: BAJA]
+
+
+Añadido: si se omiten los argumentos, el rango se tomará de los valores UID_MIN y UID_MAX que se encuentran definidos en el fichero /etc/login.defs (Pista: localizar los valores con grep) [Dificultad: MEDIA]
+
+
+#! /bin/bash
+if (( $# == 2 )) # Check the number of arguments
+then
+
+if (( $1 < $2 )) 
+then
+    min=$1
+    max=$2
+else 
+    min=$2
+    max=$1
+fi
+
+else 
+# There is no arguments
+    min=$(grep -E "UID_MIN*" "/etc/login.defs" | sed 's/[^0-9]//g')
+    max=$(grep -E "UID_MAX*" "/etc/login.defs" | sed 's/[^0-9]//g')
+fi
+
+usersInfo=$(awk -F: '{if ($3 >= '$min' && ($3 <= '$max')) print $1}' < /etc/passwd)
+IFS=$'\n' 
+
+for userLine in $usersInfo
+do
+    echo $userLine
+done

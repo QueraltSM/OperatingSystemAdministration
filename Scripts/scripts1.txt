@@ -1,0 +1,26 @@
+Escribir un script para mostrar solamente las líneas impares de un archivo de texto que se pasa como argumento al script.
+
+Añadidos: a) permitir mostrar líneas pares o impares según una opción; b) permitir un número de ficheros variable.
+
+#! /bin/bash
+while [ $# -ne 0 ]
+do
+    lines=$(cat $1 | wc -l)
+    echo "Introduce 1 to see the odd lines, or 2 for even lines of "$1
+    read option
+
+
+    for line in $(seq 1 $lines); do
+
+        if [ $((line%2)) -ne 0 ] && [ $option -eq 1 ]
+        then 
+            head -$line $1 | tail -1
+        fi
+
+        if [ $((line%2)) -eq 0 ] && [ $option -eq 2 ] 
+        then
+            head -$line $1 | tail -1
+        fi
+    done
+    shift
+done

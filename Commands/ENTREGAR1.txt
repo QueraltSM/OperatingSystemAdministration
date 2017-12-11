@@ -1,0 +1,124 @@
+Estos son siete ejercicios para practicar con filtros, tuberías y redirecciones. En algunos enunciados se da una pista sobre las órdenes principales que pueden ayudar a resolver el ejercicio con eficacia. 
+
+Tenga en cuenta que cada ejercicio se puede resolver de muchas formas distintas, no sólo la propuesta en la pista. Si usted encuentra una forma de resolverlo con órdenes distintas a las recomendadas, adelante con ello.
+
+Para entregar su solución, responda al mensaje en este mismo foro.
+
+
+
+HECHO:
+﻿Ejercicio 1: ¿Qué hace la siguiente orden?
+
+date > /tmp/foo.txt ; who >> /tmp/foo.txt
+¿Cuál es la diferencia con esta otra orden?
+
+date > /tmp/foo.txt ; who > /tmp/foo.txt
+
+Con la primera instrucción:
+Se crea el archivo "foo.txt" en el directorio /tmp, se escribe la fecha actual del sistema y posteriormente se escribe los usuarios conectados al sistema. 
+
+Con la segunda instrucción:
+Se crea el archivo "foo.txt" en el directorio /tmp, se escribe la fecha actual del sistema y posteriormente se sobrescribe el fichero, y su contenido resultante son los usuarios conectados al sistema. 
+
+Diferencia básica: ">>" anexa contenido, y ">" sobrescribe contenido. 
+
+
+
+
+Ejercicio 2: ¿Qué hace la siguiente orden?
+ls -lR /boot 2> /tmp/fichA > /tmp/fichB
+
+Redirecciona los errores estándares del directorio /boot a los ficheros fichA y fichB (ambos del directorio /tmp).
+
+
+
+
+HECHO: 
+Ejercicio 3: Combinando las órdenes head y tail, muestre la sexta línea del fichero /etc/passwd
+
+cat /etc/passwd | head -6 | tail -1
+
+head -6 : muestra las 6 primeras lineas
+tail -1: coge la última de esas 6
+
+
+Ejercicio 4: 
+Contar el número de ficheros del directorio /boot 
+(y sólo /boot, sin recursividad)  
+cuyo nombre contenga una o más letras mayúsculas (pista: grep, wc) 
+
+Sin recursividad:
+find /boot -maxdepth 1 | grep [A-Z] | wc -l 
+
+maxdepth n -> N es el numero de subdirectorios 
+por ejemplo aquí es 1 por que solo busco dentro de boot 
+
+Recursivamente: 
+find /boot/ -name "*[A-Z]*" | wc -l 
+
+
+
+
+
+
+HECHO: 
+Ejercicio 5: Cada usuario del sistema tiene asignado un shell 
+por defecto (último campo del fichero /etc/passwd).
+Escriba una lista ordenada alfabéticamente de los nombres de usuario 
+(login name) que no usan /bin/bash como shell por defecto (pista: cut, grep, sort)
+
+cat /etc/passwd | cut -f1,7 -d: | grep -v /bin/bash | cut -f1 -d: | sort 
+
+
+
+
+
+
+HECHO:
+Ejercicio 6: ¿Qué hace la siguiente orden? 
+Modifíquela para que sea más eficiente
+
+cat /etc/group | sort -t: -k1 | cut -d: -f1,3
+
+Se separa por ":" los campos del directorio /group y se ordena por su primer campo. Se
+obtiene una lista del primer y tercer campo de dicho directorio, es decir el nombre y el ID del grupo al que pertenece, respectivamente. 
+
+
+Mi modificación: cat /etc/group | cut -f1,3 -d: | sort 
+
+
+
+
+HECHO:
+Ejercicio 7: Enumere los shells que usan los usuarios de su sistema, 
+sin que haya repeticiones (pista: sort y uniq)
+
+Para mostrarlas todas:
+cat /etc/passwd | cut -f7 -d: | sort -k1 | uniq -c | tr -s ' ' | cut -f3 -d' ' 
+primero ordenamos las shells, vemos cuanto se repiten y borramos ese numero
+con tr  
+
+Me muestra en líneas sólo las que NO se repiten 
+cat /etc/passwd | cut -f7 -d: | sort -n | uniq -u 
+
+
+Para mostrar SOLO las que SI se repiten:
+cat /etc/passwd | cut -f7 -d: | sort -n | uniq -d
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

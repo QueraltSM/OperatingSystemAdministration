@@ -1,0 +1,29 @@
+Escribir un script que dadas dos carpetas A y B, muestre qué archivos están presentes solamente en una de las dos carpetas. Para cada archivo que cumpla esa condición, se mostrará su ruta completa (“A/fichero” o “B/fichero”, según el caso). El rastreo de archivos se hará sólo en el primer nivel de profundidad de las carpetas, no se hará recursivamente.
+
+Sólo se comparará el nombre de los archivos, no su tipo ni su contenido.
+
+Las rutas de las carpetas A y B se pasarán como argumentos al script.
+
+
+#!/bin/bash
+function check(){
+	for folder in $1
+	do
+		ls $folder | while read fileName
+		do
+			if [ -z $(find $2 -maxdepth 1 -name "$fileName" ) ]; then
+				echo "$folder"/"$fileName"
+			fi
+		done
+	done
+}
+
+if(( $# == 2 ))
+then
+	check "$1" "$2"
+	check "$2" "$1"
+	exit 0
+else
+	echo "Insufficient arguments"
+	exit 1
+fi

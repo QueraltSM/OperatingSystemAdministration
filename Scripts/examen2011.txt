@@ -1,0 +1,32 @@
+Muestre los procesos de usuarios que NO sean root y que se están ejecutando ahora mismo. 
+ps -u root -N
+
+
+Muestre cuál de ellos es el que lleva más tiempo presente en el sistema.
+ps -u root -N | sort -k3 | tail -2 | head -1
+
+
+Cuente el número de usuarios que tienen cuenta con fecha de caducidad.
+
+#!/bin/bash
+function calculateUsers(){
+count=0
+file=$(cat /etc/passwd | cut -f1 -d':')
+	for user in $file 
+	do
+		line=$(chage -l $user | sed -n '4p')
+		if [ -z $(echo $line | grep -q newer) ]
+		then
+			(( count++ ))
+		fi
+	done
+echo "There is $count users with password which expires."
+}
+
+calculateUsers
+exit 0 
+
+
+
+-> CON LOS 0 PODEMOS PERDER EL SINCRONISMO 
+HD3 ES MÁS PRECISO QUE EL B8Z PORQUE REDUCE EL RANGO PARA CAMBAIR LOS 0 

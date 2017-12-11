@@ -1,0 +1,25 @@
+EJERCICIO AVANZADO 3
+
+
+Dificultad: media-alta
+
+Obtenga la lista de todos los directorios del sistema que contienen documentos HTML.
+
+Los documentos HTML son aquellos que tienen extensión .htm o .html, sin distinguir mayúsculas.
+
+
+
+CON MAYUCULAS:
+
+find / -iname '*.htm' -o -iname '*.html' 
+
+
+
+SIN MAYUSCULAS:
+
+find / -iname '*.htm' -o -iname '*.html' | grep -v "[A-Z]"
+
+
+-v es para las que NO coinciden con la expresión 
+
+-o : OR LOGICO

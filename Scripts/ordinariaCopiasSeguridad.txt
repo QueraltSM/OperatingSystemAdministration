@@ -1,0 +1,42 @@
+Realice un plan de copias de seguridad para los directorios / home , / var y / opt
+que cumpla los requisitos que se describen a continuación. Debe escribir los scripts necesarios y programar el crontab adecuadamente.
+
+• Sólo deben copiarse los ficheros y directorios cuyo propietario tenga un UID > 499. 
+
+
+• Se realizará una copia completa (nivel 0) cada día 1 del mes, a las 2:00AM.
+
+
+• Se realizará una copia incremental de nivel 1 cada día par del mes (días 2, 4, 6...) a las
+4:00AM.
+
+• Las copias de seguridad deben guardarse en el directorio /mnt/DiscoExterno/backups .
+Puede suponer que el directorio ya existe.
+
+• Use el programa tar para hacer las copias. Los archivos deben quedar comprimidos
+mediante gzip .
+
+• Los nombres de los ficheros de las copias de seguridad deben contener la fecha y la hora
+en que se realiza la copia con este formato: nivelX_YYYYMMDD.tar.gz , donde X es el
+número de nivel de la copia de seguridad, YYYY es el año (2015, 2016...), MM el número del
+mes (01-12) y DD el número del día (01-31). Por ejemplo, una copia de nivel 1 realizada el
+4 de febrero de 2015 debe tener el siguiente nombre: nivel1_20150204.tar.gz
+
+
+copiaN0.ksh
+
+#!/bin/ksh
+find /home /var /opt -uid +499 -exec tar -rvf /mnt/DiscoExterno/backups/nivel0_$(date +%Y%m%d).tar {} \;
+touch /mnt/DiscoExterno/backups/flag0
+
+parcialordinaria2015.ksh
+
+#!/bin/ksh
+
+find /home /var /opt -uid +499 -newer /mnt/DiscoExterno/backups/flag0 -exec tar -rvf /mnt/DiscoExterno/backups/nivel1_$(date +%Y%m%d).tar {} \;
+
+
+
+crontab 0 2 1 * * copiaN0.ksh
+
+crontab 0 4 0-23/2 * * parcialordinaria2015.ksh

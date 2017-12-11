@@ -1,0 +1,49 @@
+2-  Implemente el siguiente plan de copias de seguridad para salvaguardar los ficheros
+que estén almacenados bajo el directorio /home, cuyo tamaño sea menor o igual a 20MBytes:
+
+• Realizar una copia de nivel 0 todos los domingos a las 13:30 horas.
+• Realizar una copia de nivel 1 todos los lunes a las 23:30 horas.
+• Realizar una copia de nivel 2 todos los martes a las 23:30 horas.
+• Realizar una copia de nivel 3 todos los miércoles a las 23:30 horas.
+• Realizar una copia de nivel 1 todos los jueves a las 23:30 horas.
+• Realizar una copia de nivel 2 todos los viernes a las 23:30 horas.
+• Realizar una copia de nivel 3 todos los sábados a las 23:30 horas.
+
+
+• Use la orden tar para realizar las copias de nivel 0, 1 y 2. Las copias de nivel 3 han de hacerse
+con la orden cpio.
+
+• El nombre de las copias ha de contener la fecha codificada de la siguiente manera:
+D_YYYYMMDD, donde D es el número del día de la semana (0, domingo; 1, lunes; …; 6,
+sábado), YYYY es el año con cuatro cifras, MM es el número del mes con dos cifras y DD el
+día del mes con dos cifras. Por ejemplo, la copia realizada el lunes, 4 de noviembre de 2013
+
+debe contener la cadena “1_20131104”; el siguiente sería un nombre válido:
+Copia_1_20131104.tar
+
+crontab 
+30 13 * 7 copyLevel0.ksh
+30 23 * 1 copyLevel1.ksh
+30 23 * 2 copyLevel2.ksh
+30 23 * 3 copyLevel3.ksh
+30 23 * 4 copyLevel4.ksh
+30 23 * 5 copyLevel5.ksh
+30 23 * 6 copyLevel6.ksh
+
+
+copyLevel0.ksh
+
+#!/bin/ksh
+find /home -size +499 -exec tar -rvf /ruta/Copia_7_$(date +%Y%m%d).tar {} \;
+touch /ruta/flag0
+exit 0 
+
+
+copyLevel1.ksh
+
+#!/bin/ksh
+
+find /home /var /opt -uid +499 -newer /ruta/flag0 -exec tar -rvf /ruta/Copia_1_$(date +%Y%m%d).tar {} \;
+
+
+

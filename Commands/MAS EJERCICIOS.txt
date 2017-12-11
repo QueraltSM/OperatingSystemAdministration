@@ -1,0 +1,92 @@
+1) Averigua todos los procesos del usuario ubuntu
+
+sudo ps aux|grep ubuntu
+
+2) ¿cuantos son?
+
+sudo ps aux|grep ubuntu|wc -l
+
+
+
+SOLUCIONES:
+
+1. Obtener los nombres de las cuentas de usuario del sistema, ordenados alfabéticamente. (pista: cut)
+
+cat /etc/passwd | cut -f1 -d: 
+
+
+
+2. Obtener los nombres de cuentas de usuario del sistema que contengan alguna letra mayúscula. (pista: grep)
+
+cat /etc/passwd | cut -f1 -d: | grep [A-Z]
+
+
+3. Encontrar los GID que se utilizan más de una vez en el fichero /etc/passwd. El GID es el campo número 4. Hay que devolver la lista de GID que se repiten. (pista: uniq)
+
+cat /etc/passwd | cut -f4 -d: | uniq -d 
+
+
+4. Quitar los comentarios de un fichero de texto. Un comentario empieza por el carácter «#» y llega hasta el final de la línea. La salida de la orden debe ser el contenido del fichero original, con todos los comentarios eliminados. (pista: cut)
+
+cut -f1 -d# ficheroCOMENTARIOS 
+
+
+5. Contar el número de apariciones de una palabra dentro de un fichero de texto. La palabra se pasa como argumento en la orden. Se considera que una palabra es un grupo de caracteres sin espacios ni tabuladores: el espacio o el tabulador actúan como separadores de palabras. (pista: usar tr para transformar espacios en saltos de línea)
+
+
+
+
+6. ¿Cuántos shells distintos se están usando en fichero /etc/passwd? 
+(pista: sort, uniq, wc)
+
+cat /etc/passwd | cut -f7 -d: | wc -l
+
+wc -l: cuenta el número de líneas 
+-d : carácter deliminatador 
+-f7: campo 7 
+
+
+
+
+7. Descubrir si existen varios usuarios con el mismo UID. (pista: sort, uniq)
+
+cat /etc/passwd | cut -f3 -d: | uniq -c 
+
+
+8. ¿Cuántos dispositivos de tipo carácter o bloque hay definidos en el sistema?(pista: los dispositivos que reconoce el sistema están en /dev, usar grep conexpresiones regulares)
+
+
+9. Número de procesos que hay actualmente ejecutándose en el sistema,relacionados con gnome. (pista: ps y gnome es el entorno de escritorio)
+
+ps aux | grep gnome | wc -l 
+
+10. De los procesos propiedad del usuario luis, obtener sus identificadores y eltiempo que llevan ejecutándose. La relación debe estar en orden inverso por eltiempo de ejecución. (pista: uso combinado ps y sort)
+
+ps axo pid,time -u luís | sort -k2 -r > SALIDA
+
+k2 es el campo de ps, ósea time 
+
+
+11. Obtener los archivos del sistema que no sean propiedad del usuario root ni delgrupo root y cuyos tamaños superen los 1024 KiB. (pista: find y negación depropiedad de fichero)
+
+find / -size +1024 ! -user root ! -group root 
+
+12. Listar los archivos del usuario luis a los que se ha accedido en los últimos sietedías. (pista: find y expresiones numéricas)
+
+find . -atime -7 
+
+-atime : accedió hace 7 días
+-amin -7 : accedió hace 7 minutos
+-mtime -365: modificó hace un año 
+-mtime +10: modificó hace más de 10 días 
+
+13. Encontrar los ficheros del usuario luis y en la misma orden cambiar supropietario a Juan (pista: find con ejecución de orden en cada hallazgo).
+
+chown -R Juan . | find / -user Luis 
+
+
+
+14. Encontrar los ficheros del usuario luis que terminan con extensión «.ksh» yconcatenarlos todos en un único fichero llamado mis_scripts.ksh. (pista: find con ejecución de orden en cada hallazgo).
+
+find / -name *.ksh -user Luis > mis_scripts.ksh 
+

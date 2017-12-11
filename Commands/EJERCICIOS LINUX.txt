@@ -1,0 +1,93 @@
+1. Determinar en qué archivos se encuentra la cadena “PATH”.
+grep -l -r "PATH" * 
+FICHEROS CON NOMBRE PATH: find . -name '*PATH*'
+
+
+2. Localizar todos los archivos en el sistema cuyo nombre contenga la cadena “rc”.
+find -name "*rc*"
+
+
+3. Localizar a partir del directorio actual todos los archivos propiedad del usuario root.
+find / -user root
+
+4. Localizar todos los archivos del sistema que hayan sido modificados en el día de hoy.
+find -mtime -1 
+es -1 : porque 24*n donde n=1 
+Si quiero los modificados las ultimas 12 horas: find -mtime -0.5
+
+
+5. Obtener todos los procesos del usuario actual.
+ps -u 
+
+6. Obtener todos los procesos del sistema.
+ps -e 
+
+7. Finalizar un proceso con un identificador de proceso dado.
+kill PIDProceso
+por ejemplo Firefox & = 1777
+kill 1777
+
+8. Finalizar todos los procesos que consisten en la ejecución de un determinado fichero ejecutable.
+ps -ax para localizar el PID de mi proceso
+killall aplicacionNombre
+
+9. Verificar que el contenido de dos archivos coincide.
+cmp archivo1 archivo2 
+
+10. Hacer que todos los archivos existentes en mi directorio actual sólo puedan ser ejecutados por su propietario.
+chmod 000 prueba
+11. Crear un archivo vacío de nombre prueba.
+touch prueba
+
+12. Cambiar la fecha de la última actualización al fichero prueba a 15/01/2002.
+touch -t yyyymmddhhmm test.txt
+para ver si se ha cambiado: ls -lt prueba
+
+13. Cambiar el propietario del fichero prueba.
+chown nuevoUsuario prueba
+ver si se ha modificado: ls -lh prueba
+14. Cambiar el grupo propietario del fichero prueba.
+groupadd GRUPO 
+chown :GRUPO prueba 
+
+
+15. Crear un archivo llamado procesos que contenga en cada línea los identificadores de procesos así como la orden asociada a cada proceso. Este archivo deberá estar ordenado por el campo identificador de procesos.
+ps axo pid,comm > procesos 
+
+
+
+ordenar por el segundo campo (comm): ps axo pid,comm | sort -k 2 > procesos
+
+
+
+Cambiar permisos a un fichero
+chmod 000 prueba -> NO PUEDES HACER NADA
+chmod 777 prueba -> PUEDES HACER DE TODO 
+
+chmod +w-r+x prueba -> NO puedes leer pero sí escribir y ejecutar
+ver usuarios y grupos : getent group 
+
+ver usuarios y grupos por nombre : getent group | grep nombreUserGroup
+
+añadir usuario a grupo: usermod -G GRUPO usuarioNuevo
+
+ver usuarios de un grupo: getent group GRUPO
+
+crear usuario y añadirlo a grupo: useradd -G GRUPO usuarioNuevo2
+
+cat /etc/passwd : ver usuarios y grupos 
+
+poner propietario de un fichero un grupo: chown :GRUPO prueba 
+
+ps-x : procesos de todos los usuarios 
+
+ver el PID de un proceso: firefox &
+
+ver la info detallada de los procesos: ps -aux 
+
+eliminar una carpeta con ficheros: rm -rf ejemploFicheroLleno 
+
+ls -lh nombreFichero: ver información de un fichero 
+
+ps -ax: para saber más info de los procesos!
+

@@ -1,0 +1,87 @@
+1. ¿Cuantos usuarios tienen su directorio personal en /home?
+cat /etc/passwd | grep /home | wc -l 
+cat /etc/passwd | grep /home | cut -d":" -f6 | wc -l
+
+Para ver quienes son: cat /etc/passwd | grep /home  
+grep /home /etc/passwd | wc -l
+
+
+2. ¿Cual es el directorio que mas espacio ocupa dentro de /usr ?
+du -s /usr/* | sort -g | tail -1
+
+
+3. Buscar todos los directorios en los que el usuario tenga permisos de escritura.
+find /home -type d -perm -200 -user usuario
+
+
+4. Buscar todos los directorios en los que el usuario tenga permisos de escritura y que los cuente.
+find /home -type d -perm -200 -user usuario | wc -l
+
+
+5. Numero de fotos (.jpg) que hay en el directorio /home
+find /home -iname "*.jpg" | wc -l
+
+
+6. Directorio Home de los usuarios que contengan en su nombre la cadena
+“Ana”sin tener en cuenta las mayúsculas
+grep -i *ana* /etc/passwd | cut -d ":" -f6
+
+
+7. Número de usuarios (cuántos) que están identificados en el sistema (usar comando who)
+who | cut -d " " -f1 | sort | uniq | wc -l
+
+
+8. Listado de todos los usuarios registrados ordenados por orden alfabético
+cat /etc/passwd | cut -d ":" -f1 | sort
+
+
+9. Guardar en el fichero musica.txt todos los archivos de música (.mp3) que son propiedad usuario “usuario”.
+find -type f -iname "*.mp3" -user usuario > /home/usuario/Escritorio/musica.txt
+
+
+10. Listar todos los procesos que se estén ejecutando actualmente en el sistema y pertenezcan al root.
+ps -ef | cut -d " " -f1 | grep root
+ps -ef | grep ^root
+
+
+11. Guardar en el fichero nuevos_directorios.txt el nombre de los directorios que han creado todos los usuarios que pertenecen al grupo users ordenados alfabéticamente de manera descendente.
+find / -type d -group usuario | sort -f > /home/usuario/Escritorio/nuevos_directorios.txt
+
+
+12. Obtener un listado de los 30 archivos de todo el sistema que acaben en .h, y su nombre contenga el texto “sys”
+find / -type f -iname "*sys*.h" | head -n30
+
+
+13. Listar sólo el GID los dos últimos grupos del sistema que contengan la letra “a”
+grep a /etc/group | tail -n2 | cut -d":" -f3
+
+
+14. Listar todos los directorios del sistema que tengan activados todos los permisos.
+find / -type d -perm -777
+
+
+15. Muestra sólo los nombres de usuarios que tengan la contraseña activa en el sistema
+cat /etc/shadow | cut -d ":" -f1,2 | grep -v \* | grep -v \! | cut -d ":" -f1
+
+
+16. Buscar en todas las particiones de windows los ficheros que en su nombre contengan readme indistintamente mayúsculas y minúsculas:
+mount -t ntfs-3g /dev/sda5 /media/windows1
+find /media/windows /media/windows1 -iname "*readme*" -type f
+
+
+17. Listado de todos los grupos del sistema que no se utilizan como grupo secundario de ningún usuario del sistema ordenados de la z a la a sin que aparezcan
+repetidos.
+grep ":$" /etc/group | cut -d ":" -f1 | sort -rf
+
+
+18. Listado de todos los directorios que contiene el directorio “home” del usuario que ejecuta la orden y que se guarden
+en el fichero “lista-directorios”
+find ~ -type d > lista-directorios.txt
+
+
+19. ¿Qué comando utilizaría para saber cuantos (Sólo un número) repositorios están activos y utilizan la sección “multiverse”?
+grep -v ^# /etc/apt/sources.list | grep multiverse | wc -l
+
+
+20. Buscar todos los archivos empezando en el directorio home del usuario llamado “usuario” que tengan sólo los permisos de lectura y escritura para el usuario y permisos de lectura para el grupo y los otros.
+find /home/usuario -type f -perm -644

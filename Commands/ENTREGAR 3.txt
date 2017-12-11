@@ -1,0 +1,40 @@
+Estos son varios ejercicios que se pueden resolver con la orden ps y, en ciertos casos, combinados con algún filtro estándar.
+
+Entregue sus soluciones respondiendo a este mismo mensaje del foro.
+
+﻿HECHO:
+1. Muestre el tiempo transcurrido desde su lanzamiento, el PID y la orden de todos los procesos que se están ejecutando en el sistema.
+ 
+ps axo time,pid,comm 
+
+
+
+HECHO:
+2. Muestre el pid y el propietario de todos los procesos que estén ejecutando el programa bash. La lista debe estar ordenada por el nombre del propietario.
+ps axo pid,user,comm | grep bash | tr -s ' ' | cut -f1,2 -d' ' | sort -k2 -n 
+
+tr -s ' ' : PARA ELIMINAR ESPACIOS DE MÁS
+
+
+HECHO:
+
+3. ¿Qué hace la siguiente orden?
+
+ps -e --forest
+
+Esta instrucción nos muestra una representación gráfica del árbol de procesos del sistema.
+ 
+
+4. ¿Qué hace la siguiente orden?
+
+ps -e -opid,ppid,user,pcpu,cputime,cmd --sort=cputime
+
+Ordenar los procesos del sistema en función del tiempo que pasa en la cpu, y mostrar por la terminal las columnas que identifican al PID del proceso, su PPID, su propietario, el porcentaje de CPU que consume, y el tiempo, y la orden de este.   
+
+
+HECHO:
+5. Localice los 5 procesos que han consumido más CPU hasta el momento.
+ps aux | sort -k3 -r | head -5 
+
+head -6 si existe alguna línea de información que sea larga y ocupe una línea más
+head -5 si dicha línea es corta

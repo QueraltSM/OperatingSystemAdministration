@@ -1,0 +1,53 @@
+Estos son varios ejercicios que se pueden resolver fácilmente con la orden find. 
+
+Envíe sus soluciones respondiendo directamente a este mensaje.
+
+En el contexto de este bloque  de ejercicios se entenderá que el término «fichero» se refiere a un fichero regular, mientras que «archivo» se refiere a cualquier entidad del sistema de ficheros (archivo, directorio, enlace, ...).
+
+
+HECHO:
+1. ¿Qué hace la siguiente orden?
+find /etc /boot -type f -newer /etc/passwd 
+
+Busca archivos de /etc /boot que se modificaron más recientemente que el fichero /etc/passwd.
+
+
+
+HECHO:
+2. Localice todos los archivos que no pertenezcan al usuario root cuyo tamaño sea mayor que 10 KiB y menor que 50 KiB
+
+find / -size +10k -a -50k ! -user root
+
+-a: AND operator 
+! - user root : TODOS MENOS ROOT
+
+
+HECHO:
+3. Calcule la suma md5 de los ficheros de tamaño inferior a 10Kib o superior a 1Mib, que haya bajo los directorios /bin y /sbin. El cálculo de la suma md5 típicamente se realiza con la orden «md5sum». 
+
+find /bin -size -10k -o -size +1M -exec md5sum {} + > bin_checksum.txt | find /sbin -size -10k -o -size +1M -exec md5sum {} + | grep -vf bin_checksum.txt
+
+
+
+
+
+HECHO:
+4. Localice todos los archivos del directorio /root que tengan permiso de lectura para el grupo propietario, independientemente del resto de permisos.
+
+ls -lh /root | awk -F ''  '$5=="r"'
+
+localiza la pos5 y mira si es r
+
+
+
+HECHO:
+5. ¿Qué hace la siguiente orden?
+
+cd ; find . -maxdepth 1 \( -empty -o -newer /etc/passwd \)
+
+
+Busca archivos o directorios con archivos vacíos o modificados más recientemente que el fichero /etc/passwd. 
+
+
+
+

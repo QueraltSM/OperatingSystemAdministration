@@ -1,0 +1,14 @@
+#!/bin/bash
+cat /etc/passwd | sort |  while read line
+do
+	if [[ $(echo $line | cut -d':' -f7) == "/sbin/nologin" ]]
+	then
+		login=$(echo $line | cut -d':' -f1)
+		uid=$(echo $line | cut -d':' -f3)
+		shell=$(echo $line | cut -f7 -d':')
+		echo "$login,$uid,$shell" >> fileAux.txt
+	fi
+done
+echo "$(cat fileAux.txt)\n"
+rm -f fileAux.txt
+exit 0

@@ -1,0 +1,20 @@
+Escribir un script para dado un número entero que se pasa como argumento, obtener la relación de usuarios del sistema que son propietarios de un número de archivos mayor o igual que ese número. (Pista: use la orden find).
+
+#!/bin/bash
+ 
+function findUsers(){
+	find / -printf "%u\n" | sort | uniq -c
+}
+
+function printUsers(){
+	while read count user
+	do
+		if(( $count >= $1 ))
+		then
+			echo "User $user has $count files"
+		fi
+	done
+}
+echo "Owners of more than $1 files:\n"
+findUsers 2>/dev/null | printUsers $1
+exit 0
